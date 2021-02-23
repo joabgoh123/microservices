@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"modules/repo"
 	"net/http"
 	"time"
 
@@ -10,6 +11,9 @@ import (
 )
 
 func main() {
+	//Connect to database
+	repository := repo.ConnectDB()
+	fmt.Println(repository)
 	r := chi.NewRouter()
 	//Middleware
 	r.Use(middleware.Logger)
