@@ -22,20 +22,20 @@ spec:
         envFrom:
         - configMapRef:
             name: postgres-config
-#         volumeMounts:
-#           - mountPath: /var/lib/postgresql/data
-#             name: postgres-volume-claim
-#       volumes:
-#         - name: postgres-volume-claim
-#           persistentVolumeClaim:
-#             claimName: postgres-pv-claim
-# ---
+      #   volumeMounts:
+      #     - mountPath: /var/lib/postgresql
+      #       name: postgres-volume-claim
+      # volumes:
+      #   - name: postgres-volume-claim
+      #     persistentVolumeClaim:
+      #       claimName: postgres-pv-claim
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: postgres-config
 data:
-  POSTGRES_DB: postgresdb
+  POSTGRES_DB: user
   POSTGRES_USER: postgresadmin
   POSTGRES_PASSWORD: admin123
   # PGDATA: /var/lib/postgresql/data/pgdata
@@ -63,13 +63,13 @@ spec:
 #     type: local
 #     app: postgres
 # spec:
-#   storageClassName: hostpath
+#   storageClassName: microk8s-hostpath
 #   capacity:
 #     storage: 5Gi
 #   accessModes:
 #     - ReadWriteMany
 #   hostPath:
-#     path: //c/Users/Joab/Desktop/Personal Documents/Golang/microservices/infra/volumes
+#     path: /home/joab/Desktop/Volumes
 # ---
 # kind: PersistentVolumeClaim
 # apiVersion: v1
@@ -78,7 +78,7 @@ spec:
 #   labels:
 #     app: postgres
 # spec:
-#   storageClassName: hostpath
+#   storageClassName: microk8s-hostpath
 #   accessModes:
 #     - ReadWriteMany
 #   resources:
