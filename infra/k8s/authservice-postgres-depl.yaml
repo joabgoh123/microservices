@@ -22,14 +22,14 @@ spec:
         envFrom:
         - configMapRef:
             name: postgres-config
-        volumeMounts:
-          - mountPath: postgresql/data
-            name: postgres-volume-claim
-      volumes:
-        - name: postgres-volume-claim
-          persistentVolumeClaim:
-            claimName: postgres-pv-claim
----
+#         volumeMounts:
+#           - mountPath: /var/lib/postgresql/data
+#             name: postgres-volume-claim
+#       volumes:
+#         - name: postgres-volume-claim
+#           persistentVolumeClaim:
+#             claimName: postgres-pv-claim
+# ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -38,6 +38,7 @@ data:
   POSTGRES_DB: postgresdb
   POSTGRES_USER: postgresadmin
   POSTGRES_PASSWORD: admin123
+  # PGDATA: /var/lib/postgresql/data/pgdata
 
 ---
 apiVersion: v1
@@ -53,33 +54,33 @@ spec:
     - port: 5432
       targetPort: 5432
 
----
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: postgres-pv-volume
-  labels:
-    type: local
-    app: postgres
-spec:
-  storageClassName: hostpath
-  capacity:
-    storage: 5Gi
-  accessModes:
-    - ReadWriteMany
-  hostPath:
-    path: "C:/Users/Joab/Desktop/Personal Documents/Golang/microservices/infra/volumes"
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: postgres-pv-claim
-  labels:
-    app: postgres
-spec:
-  storageClassName: hostpath
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 5Gi
+# ---
+# kind: PersistentVolume
+# apiVersion: v1
+# metadata:
+#   name: postgres-pv-volume
+#   labels:
+#     type: local
+#     app: postgres
+# spec:
+#   storageClassName: hostpath
+#   capacity:
+#     storage: 5Gi
+#   accessModes:
+#     - ReadWriteMany
+#   hostPath:
+#     path: //c/Users/Joab/Desktop/Personal Documents/Golang/microservices/infra/volumes
+# ---
+# kind: PersistentVolumeClaim
+# apiVersion: v1
+# metadata:
+#   name: postgres-pv-claim
+#   labels:
+#     app: postgres
+# spec:
+#   storageClassName: hostpath
+#   accessModes:
+#     - ReadWriteMany
+#   resources:
+#     requests:
+#       storage: 5Gi
