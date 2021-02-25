@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authservice-postgres-depl
+  labels:
+    app: authservice-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres
+        ports:
+        - containerPort: 5432
+        envFrom:
+        - configMapRef:
+            name: postgres-config
+#         volumeMounts:
+#           - mountPath: /var/lib/postgresql/data
+#             name: postgres-volume-claim
+#       volumes:
+#         - name: postgres-volume-claim
+#           persistentVolumeClaim:
+#             claimName: postgres-pv-claim
+# ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+data:
+  POSTGRES_DB: postgresdb
+  POSTGRES_USER: postgresadmin
+  POSTGRES_PASSWORD: admin123
+  # PGDATA: /var/lib/postgresql/data/pgdata
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authservice-postgres-srv
+spec:
+  type: NodePort
+  selector:
+    app: postgres
+  ports:
+      # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
+    - port: 5432
+      targetPort: 5432
+
+# ---
+# kind: PersistentVolume
+# apiVersion: v1
+# metadata:
+#   name: postgres-pv-volume
+#   labels:
+#     type: local
+#     app: postgres
+# spec:
+#   storageClassName: hostpath
+#   capacity:
+#     storage: 5Gi
+#   accessModes:
+#     - ReadWriteMany
+#   hostPath:
+#     path: //c/Users/Joab/Desktop/Personal Documents/Golang/microservices/infra/volumes
+# ---
+# kind: PersistentVolumeClaim
+# apiVersion: v1
+# metadata:
+#   name: postgres-pv-claim
+#   labels:
+#     app: postgres
+# spec:
+#   storageClassName: hostpath
+#   accessModes:
+#     - ReadWriteMany
+#   resources:
+#     requests:
+#       storage: 5Gi
